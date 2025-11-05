@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Sheet - Alta Cal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 15px;
+            background-color: #f5f5f5;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .section {
+            margin-bottom: 10px;
+            border: 2px solid #333;
+            padding: 8px;
+            background-color: #fff;
+        }
+
+        .section-header {
+            background-color: #000;
+            color: white;
+            padding: 6px 10px;
+            font-weight: bold;
+            margin: -8px -8px 8px -8px;
+            font-size: 14px;
+        }
+
+        .bank-info {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .bank-label {
+            font-weight: bold;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        input[type="number"] {
+            text-align: right;
+        }
+
+        .amount-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            padding: 8px;
+            background-color: #f0f0f0;
+            border: 1px solid #999;
+            text-align: right;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 4px 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        td input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            padding: 2px;
+            font-size: 13px;
+        }
+
+        .summary-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .summary-label {
+            font-weight: bold;
+            background-color: #000;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .summary-value {
+            background-color: #f0f0f0;
+            border: 1px solid #999;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .bank-info {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-section {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 5px;
+            }
+
+            .section-header {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+
+            .section-header input {
+                width: 100%;
+            }
+
+            .amount-display {
+                font-size: 20px;
+            }
+
+            .summary-value {
+                font-size: 18px;
+            }
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 10px;
+                max-width: 100%;
+            }
+
+            .section {
+                page-break-inside: avoid;
+                margin-bottom: 8px;
+                padding: 6px;
+            }
+
+            .section-header {
+                padding: 4px 8px;
+                margin: -6px -6px 6px -6px;
+                font-size: 12px;
+            }
+
+            h1 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            th, td {
+                padding: 3px 4px;
+                font-size: 11px;
+            }
+
+            td input {
+                font-size: 11px;
+            }
+
+            .summary-section {
+                margin-top: 5px;
+                gap: 10px;
+            }
+
+            .summary-label {
+                padding: 4px;
+                font-size: 11px;
+            }
+
+            .summary-value {
+                padding: 4px;
+                font-size: 16px;
+            }
+
+            button {
+                display: none;
+            }
+
+            input[type="text"],
+            input[type="date"],
+            input[type="number"] {
+                font-size: 11px;
+                padding: 2px;
+            }
+        }
+
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .print-button {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .add-file-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .print-button:hover {
+            background-color: #0b7dda;
+        }
+
+        .add-file-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>INVOICE SHEET</h1>
+
+        <!-- Money in Bank Section with Job Number -->
+        <div class="section">
+            <div class="section-header" style="display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center;">
+                <div>JOB NUMBER: <input type="text" id="jobNumber" value="1295-1235" style="background: white; border: 1px solid #666; padding: 5px 10px; font-size: 16px; font-weight: bold; color: #000; border-radius: 3px;"></div>
+                <div>MONEY IN BANK</div>
+            </div>
+            <div class="bank-info">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="moneyInBank" checked>
+                    <label for="moneyInBank">YES</label>
+                </div>
+                <div>
+                    <input type="date" id="contractDate" value="2025-10-30">
+                </div>
+                <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center;">
+                    <div style="font-weight: bold;">CONTRACT AMOUNT</div>
+                    <input type="number" class="amount-display" id="contractAmount" value="6851.00" step="0.01" inputmode="decimal" style="border: 1px solid #999;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Invoice Amount Section -->
+        <div class="section">
+            <div class="section-header">INVOICE AMOUNT</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">LABOR & MATERIAL</th>
+                        <th style="width: 35%;">COST</th>
+                        <th style="width: 15%;">PAID</th>
+                    </tr>
+                </thead>
+                <tbody id="invoiceTable">
+                    <tr>
+                        <td><input type="text" value="OSCAR E"></td>
+                        <td><input type="number" value="1250.00" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button onclick="addInvoiceRow()" style="margin-top: 10px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; width: 100%;">+ Add Invoice Row</button>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="section">
+            <div class="summary-section">
+                <div class="summary-item">
+                    <div class="summary-label">LABOR & MATERIAL COST</div>
+                    <div class="summary-value" id="totalCost">$1,250.00</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">JOB COST PERCENTAGE</div>
+                    <div class="summary-value" id="costPercentage">18.0%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-container no-print">
+            <button class="action-button print-button" onclick="printFile()">🖨️ Print File</button>
+            <button class="action-button add-file-button" onclick="addNewFile()">+ Add New File</button>
+        </div>
+    </div>
+
+    <script>
+        // Print current file
+        function printFile() {
+            window.print();
+        }
+
+        // Add new file
+        function addNewFile() {
+            // Save current file first
+            saveCurrentFile();
+            
+            // Create new file
+            const jobNumber = prompt("Enter new job number:");
+            if (jobNumber && jobNumber.trim() !== "") {
+                // Clear current data
+                document.getElementById('jobNumber').value = jobNumber;
+                document.getElementById('contractAmount').value = '';
+                document.getElementById('contractDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('moneyInBank').checked = false;
+                
+                // Clear invoice table and add 15 empty rows
+                const tbody = document.getElementById('invoiceTable');
+                tbody.innerHTML = '';
+                
+                for (let i = 0; i < 15; i++) {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td style="text-align: center;"><input type="checkbox"></td>
+                    `;
+                    tbody.appendChild(newRow);
+                }
+                
+                // Re-attach event listeners
+                attachEventListeners();
+                calculateTotals();
+                
+                // Save the new file
+                saveCurrentFile();
+            }
+        }
+
+        // Save current file to localStorage
+        function saveCurrentFile() {
+            const jobNumber = document.getElementById('jobNumber').value;
+            if (!jobNumber || jobNumber.trim() === "") return;
+            
+            const fileData = {
+                jobNumber: jobNumber,
+                contractAmount: document.getElementById('contractAmount').value,
+                contractDate: document.getElementById('contractDate').value,
+                moneyInBank: document.getElementById('moneyInBank').checked,
+                invoices: []
+            };
+            
+            // Collect invoice data
+            const rows = document.querySelectorAll('#invoiceTable tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 3) {
+                    const company = cells[0].querySelector('input').value;
+                    const cost = cells[1].querySelector('input').value;
+                    const paid = cells[2].querySelector('input').checked;
+                    
+                    if (company || cost) {
+                        fileData.invoices.push({ company, cost, paid });
+                    }
+                }
+            });
+            
+            // Save to localStorage
+            const files = JSON.parse(localStorage.getItem('contractFiles') || '{}');
+            files[jobNumber] = fileData;
+            localStorage.setItem('contractFiles', JSON.stringify(files));
+        }
+
+        // Auto-save on changes
+        function setupAutoSave() {
+            setInterval(saveCurrentFile, 5000); // Auto-save every 5 seconds
+        }
+
+        // Add new invoice row
+        function addInvoiceRow() {
+            const tbody = document.getElementById('invoiceTable');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Company name"></td>
+                <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                <td style="text-align: center;"><input type="checkbox"></td>
+            `;
+            tbody.appendChild(newRow);
+            
+            // Add event listener to the new amount input
+            const newInput = newRow.querySelector('.invoice-amount');
+            newInput.addEventListener('input', calculateTotals);
+            newInput.addEventListener('change', calculateTotals);
+        }
+
+        // Calculate totals and percentages
+        function calculateTotals() {
+            const contractAmount = parseFloat(document.getElementById('contractAmount').value) || 0;
+            const amountInputs = document.querySelectorAll('.invoice-amount');
+            let totalCost = 0;
+
+            amountInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                totalCost += value;
+            });
+
+            document.getElementById('totalCost').textContent = '$' + totalCost.toFixed(2);
+            
+            if (contractAmount > 0) {
+                const percentage = (totalCost / contractAmount * 100).toFixed(1);
+                document.getElementById('costPercentage').textContent = percentage + '%';
+            } else {
+                document.getElementById('costPercentage').textContent = '0.0%';
+            }
+        }
+
+        // Attach event listeners
+        function attachEventListeners() {
+            // Add event listeners to all invoice amount inputs
+            document.querySelectorAll('.invoice-amount').forEach(input => {
+                input.addEventListener('input', calculateTotals);
+                input.addEventListener('change', calculateTotals);
+            });
+
+            // Add event listener to contract amount
+            document.getElementById('contractAmount').addEventListener('input', calculateTotals);
+            document.getElementById('contractAmount').addEventListener('change', calculateTotals);
+        }
+
+        // Initialize
+        attachEventListeners();
+        calculateTotals();
+        setupAutoSave();
+    </script>
+</body>
+</html>
