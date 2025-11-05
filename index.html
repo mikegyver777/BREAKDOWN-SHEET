@@ -304,20 +304,20 @@
         <!-- Money in Bank Section with Job Number -->
         <div class="section">
             <div class="section-header" style="display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center;">
-                <div>JOB NUMBER: <input type="text" id="jobNumber" value="1295-1235" style="background: white; border: 1px solid #666; padding: 5px 10px; font-size: 16px; font-weight: bold; color: #000; border-radius: 3px;"></div>
+                <div>JOB NUMBER: <input type="text" id="jobNumber" value="" placeholder="Enter job number" style="background: white; border: 1px solid #666; padding: 5px 10px; font-size: 16px; font-weight: bold; color: #000; border-radius: 3px;"></div>
                 <div>MONEY IN BANK</div>
             </div>
             <div class="bank-info">
                 <div class="checkbox-container">
-                    <input type="checkbox" id="moneyInBank" checked>
+                    <input type="checkbox" id="moneyInBank">
                     <label for="moneyInBank">YES</label>
                 </div>
                 <div>
-                    <input type="date" id="contractDate" value="2025-10-30">
+                    <input type="date" id="contractDate" value="">
                 </div>
                 <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center;">
                     <div style="font-weight: bold;">CONTRACT AMOUNT</div>
-                    <input type="number" class="amount-display" id="contractAmount" value="6851.00" step="0.01" inputmode="decimal" style="border: 1px solid #999;">
+                    <input type="number" class="amount-display" id="contractAmount" value="" placeholder="0.00" step="0.01" inputmode="decimal" style="border: 1px solid #999;">
                 </div>
             </div>
         </div>
@@ -335,8 +335,8 @@
                 </thead>
                 <tbody id="invoiceTable">
                     <tr>
-                        <td><input type="text" value="OSCAR E"></td>
-                        <td><input type="number" value="1250.00" step="0.01" class="invoice-amount" inputmode="decimal"></td>
+                        <td><input type="text" placeholder="Company name"></td>
+                        <td><input type="number" step="0.01" class="invoice-amount" inputmode="decimal"></td>
                         <td style="text-align: center;"><input type="checkbox"></td>
                     </tr>
                     <tr>
@@ -419,11 +419,11 @@
             <div class="summary-section">
                 <div class="summary-item">
                     <div class="summary-label">LABOR & MATERIAL COST</div>
-                    <div class="summary-value" id="totalCost">$1,250.00</div>
+                    <div class="summary-value" id="totalCost">$0.00</div>
                 </div>
                 <div class="summary-item">
                     <div class="summary-label">JOB COST PERCENTAGE</div>
-                    <div class="summary-value" id="costPercentage">18.0%</div>
+                    <div class="summary-value" id="costPercentage">0.0%</div>
                 </div>
             </div>
         </div>
